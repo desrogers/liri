@@ -3,13 +3,18 @@ require("dotenv").config();
 var keys = require("./keys");
 var axios = require("axios");
 var moment = require("moment");
-// const spotify = new Spotify(keys.spotify);
+var Spotify = require("node-spotify-api");
+var spotify = new Spotify(keys.spotify);
 var action = process.argv[2];
 var value = process.argv;
 
 switch (action){
 case "concert-this":
     concert();
+    break;
+
+case "spotify-this-song":
+    spotifyThis();
     break;
 }
 
@@ -62,4 +67,68 @@ function concert(){
             console.log(error.config);
           });
 
+}
+
+function spotifyThis(){
+    var trackName = value.slice(3).join(" ");
+    console.log("Query: " + trackName);
+
+    if (process.argv[3] === undefined){
+        spotify.search({type: 'track', query: "The Sign Ace of Base"}, function(err, data) {
+            if (err){
+                return console.log("Error occured: " + err);
+            } else {
+    
+                var info = data.tracks.items[0];
+                // console.log(info);
+                
+                var artists = info.artists;
+                var artistArr = [];
+                artists.forEach(function(artist){
+                    artistArr.push(artist.name);
+                });
+        
+                artistArr = artistArr.slice(0).join(", ");
+        
+                console.log("Track: "+info.name);
+                console.log('--------------');
+                console.log("Artist(s): "+ artistArr);
+                console.log('--------------');
+                console.log("Album: "+info.album.name);
+                console.log('--------------');
+                console.log("Preview: "+info.preview_url);
+            } 
+
+        });
+
+    } else {
+
+        spotify.search({type: 'track', query: trackName, limit: 1}, function(err, data) {
+            if (err){
+                return console.log("Error occured: " + err);
+            } else {
+    
+                var info = data.tracks.items[0];
+                // console.log(info);
+                
+                var artists = info.artists;
+                var artistArr = [];
+                artists.forEach(function(artist){
+                    artistArr.push(artist.name);
+                });
+        
+                artistArr = artistArr.slice(0).join(", ");
+        
+                console.log("Track: "+info.name);
+                console.log('--------------');
+                console.log("Artist(s): "+ artistArr);
+                console.log('--------------');
+                console.log("Album: "+info.album.name);
+                console.log('--------------');
+                console.log("Preview: "+info.preview_url);
+            } 
+        });
+    } 
+
+        
 }
