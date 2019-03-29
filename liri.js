@@ -1,39 +1,29 @@
 require("dotenv").config();
 
+// VARIABLES
+// --------------------------------
 var keys = require("./keys");
 var axios = require("axios");
 var moment = require("moment");
 var Spotify = require("node-spotify-api");
+var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 var action = process.argv[2];
-var value = process.argv;
+var input = process.argv.slice(3).join("+");
 
-switch (action){
-case "concert-this":
-    concert();
-    break;
 
-case "spotify-this-song":
-    spotifyThis();
-    break;
-
-case "movie-this":
-    movieThis();
-    break;
-}
-
+// FUNCTIONS
+// ---------------------------------
 // concert-this-song
-function concert(){
-    let artist = value.slice(3).join("%20");
-    console.log(artist);
+function concertThis(bandName){
 
     // use axios to grab data from bands in town
-    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
+    axios.get("https://rest.bandsintown.com/artists/" + bandName + "/events?app_id=codingbootcamp")
         .then(function(response){
             // console.log(response.data);
 
             if (response.data.length <= 0){
-                console.log("Uh oh. Bandsintown said "+ value.slice(3).join(" ") + "doesn't have any upcoming shows.")
+                console.log("Uh oh. Bandsintown said "+ process.argv.slice(3).join(" ") + "doesn't have any upcoming shows.")
             } else {
 
                 for (var i = 0; i < response.data.length; i++) {
@@ -50,12 +40,10 @@ function concert(){
 Date: ${moment(date).format("MM/DD/YYYY")}
 Venue: ${venue.name}
 Location: ${location}
-----------------------
 `
-                        );
+                    );
                 }
             }
-
         })
         .catch(function (error) {
             if (error.response) {
@@ -78,80 +66,41 @@ Location: ${location}
 }
 
 // spotify-this-song
-function spotifyThis(){
-    var trackName = value.slice(3).join(" ");
-    console.log("Query: " + trackName);
+function spotifyThis(trackName){
 
-    if (process.argv[3] === undefined){
-        spotify.search({type: 'track', query: "The Sign Ace of Base"}, function(err, data) {
-            if (err){
-                return console.log("Error occured: " + err);
-            } else {
-    
-                var info = data.tracks.items[0];
-                // console.log(info);
-                
-                var artists = info.artists;
-                var artistArr = [];
-                artists.forEach(function(artist){
-                    artistArr.push(artist.name);
-                });
-        
-                artistArr = artistArr.slice(0).join(", ");
-                console.log(
+    spotify.search({ type: "track", query: trackName, limit: 1 }, function (err, data) {
+        if (err) {
+            return console.log("Error occured: " + err);
+        } else {
+
+            var info = data.tracks.items[0];
+            var artists = info.artists;
+            var artistArr = [];
+
+            artists.forEach(function (artist) {
+                artistArr.push(artist.name);
+            });
+
+            artistArr = artistArr.slice(0).join(", ");
+            
+            console.log(
 `
 Track: ${info.name}
 Artist(s): ${artistArr}
 Album: ${info.album.name}
 Preview: ${info.preview_url}
-------------------------
 `
-                );
-            } 
-        });
-
-    } else {
-
-        spotify.search({type: 'track', query: trackName, limit: 1}, function(err, data) {
-            if (err){
-                return console.log("Error occured: " + err);
-            } else {
-    
-                var info = data.tracks.items[0];
-                // console.log(info);
-                
-                var artists = info.artists;
-                var artistArr = [];
-                artists.forEach(function(artist){
-                    artistArr.push(artist.name);
-                });
-        
-                artistArr = artistArr.slice(0).join(", ");
-        
-                console.log("Track: "+info.name);
-                console.log("Artist(s): "+ artistArr);
-                console.log("Album: "+info.album.name);
-                console.log("Preview: "+info.preview_url);
-            } 
-        });
-    } 
+            );
+        }
+    });
 }
 
-function movieThis(){
-    var queryUrl = "";
-    var movieName = value.slice(3).join("+");
-
-    if (value[3] === undefined) {
-        queryUrl = "http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy";
-    } else {
-        queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-    }
-
+// movie-this
+function movieThis(movieTitle){
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieTitle + "&y=&plot=short&apikey=trilogy";
 
     axios.get(queryUrl).then(
         function(response) {
-            console.log(queryUrl);
-            console.log(response.data);
             console.log(
 `
 Title: ${response.data.Title}
@@ -167,4 +116,57 @@ Cast: ${response.data.Actors}
         }
     );
 
+}
+
+// do-what-it-says
+function doWhat(){
+    fs.readFile("random.txt", "utf8", function(error, data){
+        var dataArr = data.split(",");
+        var action = dataArr[0];
+        var input = dataArr[1];
+
+        console.log(`Action: ${action}, Input: ${input}`)
+
+        switch (action){
+            case "concert-this":
+                concert(input);
+                break;
+            
+            case "spotify-this-song":
+                spotifyThis(input);
+                break;
+            
+            case "movie-this":
+                movieThis(input);
+                break;
+        }
+    });
+}
+
+// MAIN PROGRAM
+// --------------------------------
+switch (action){
+case "concert-this":
+    concertThis(input);
+break;
+
+case "spotify-this-song":
+    if (input === "") {
+        spotifyThis("The Sign Ace Base");
+    } else {
+        spotifyThis(input);
+    }
+    break;
+
+case "movie-this":
+    if (input === ""){
+        movieThis("Mr. Nobody");
+    } else {
+        movieThis(input);
+    }
+    break;
+
+case "do-what-it-says":
+    doWhat(input);
+    break;
 }
