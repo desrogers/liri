@@ -35,13 +35,17 @@ function concertThis(bandName){
                     } else {
                         location = venue.city + ", " + venue.region + ", " + venue.country;
                     }
-                    console.log(
+
+                    var concertData = 
 `
 Date: ${moment(date).format("MM/DD/YYYY")}
 Venue: ${venue.name}
 Location: ${location}
-`
-                    );
+`;
+                    console.log(concertData);
+
+                    logger(concertData);
+
                 }
             }
         })
@@ -83,14 +87,17 @@ function spotifyThis(trackName){
 
             artistArr = artistArr.slice(0).join(", ");
             
-            console.log(
+            var spotifyData =
 `
 Track: ${info.name}
 Artist(s): ${artistArr}
 Album: ${info.album.name}
 Preview: ${info.preview_url}
 `
-            );
+            ;
+            console.log(spotifyData);
+            logger(spotifyData);
+            
         }
     });
 }
@@ -141,6 +148,14 @@ function doWhat(){
                 break;
         }
     });
+}
+
+function logger(foo){
+    fs.appendFile("log.txt", foo, function(err){
+        if (err){
+           return console.log(err);
+        }
+    })
 }
 
 // MAIN PROGRAM
