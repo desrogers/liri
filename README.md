@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 # LIRI
 Based on user input this Nodejs app will search Spotify for songs, Bands in Town for a band's concerts, and OMDB for movies. Then it will log the result in the terminal console and add it to log.txt.
+=======
+# LIRI Bot
+>>>>>>> master
 
 ## Structure
 ```
@@ -17,6 +21,7 @@ Based on user input this Nodejs app will search Spotify for songs, Bands in Town
 └── random.txt
 ```
 
+<<<<<<< HEAD
 ## How to Get Up and Running
 You can use the LIRI app by following these steps:
 
@@ -37,3 +42,8 @@ node liri [concert-this | movie-this | spotify-this | do-what-it-says] query
 - do-what-it-says: doesn't take an input; this action does what the text says in random.txt.
 
 ## [Demo](https://drive.google.com/file/d/1BpBmcQp5zGcKZ1d2F4hRHvdDB61se7zp/view?usp=sharing)
+=======
+LIRI searches Spotify for songs, Bands in Town for concerts, and OMDB for movies.
+
+[App Demo](https://drive.google.com/file/d/1BpBmcQp5zGcKZ1d2F4hRHvdDB61se7zp/view?usp=sharing)
+>>>>>>> master
