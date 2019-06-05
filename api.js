@@ -44,9 +44,10 @@ Band: ${bandProperName}
             location = venue.city + ", " + venue.region + ", " + venue.country;
           }
 
-          var concertData = `
+          var concertData = 
+`
 Date: ${moment(date).format("MM/DD/YYYY")}
-Location: ${venue.name}, ${location}`;
+Location: ${venue.name}, ${location}`
 
           console.log(concertData);
           logger(concertData);
@@ -78,7 +79,8 @@ exports.movieThis = function(movieTitle) {
       "http://www.omdbapi.com/?t=" + movieTitle + "&y=&plot=short&apikey=trilogy";
   
     axios.get(queryUrl).then(function(response) {
-      console.log(`
+      console.log(
+`
 Title: ${response.data.Title}
 Release Year: ${response.data.Year}
 IMDB Rating: ${response.data.Ratings[0].Value}
@@ -108,11 +110,13 @@ exports.spotifyThis = function(trackName){
 
             artistArr = artistArr.slice(0).join(", ");
             
-            var spotifyData =`
+            var spotifyData =
+`
 Track: ${info.name}
 Artist(s): ${artistArr}
 Album: ${info.album.name}
-Preview: ${info.preview_url}`;
+Preview: ${info.preview_url}
+`;
 
             console.log(spotifyData);
             logger(spotifyData);
