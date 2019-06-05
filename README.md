@@ -14,7 +14,7 @@ Based on user input this Nodejs app will search Spotify for songs, Bands in Town
 │   └── results.log
 ├── package-lock.json
 ├── package.json
-└── random.txt                                                                                                       
+└── random.txt
 ```
 
 ## How to Get Up and Running
