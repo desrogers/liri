@@ -5,7 +5,7 @@ var moment = require("moment");
 var keys = require("./keys");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
-var logger = require('./logs/logger')
+var logger = require('./logs/logger');
 
 function titleCase(inStr) {
     return inStr.replace(/\w\S*/g, function(tStr) {
