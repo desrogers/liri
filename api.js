@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 require("dotenv").config();
 var axios = require("axios");
 var moment = require("moment");
 var keys = require("./keys");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
-var logger = require('./logger')
+var logger = require('./logs/logger')
 
 function titleCase(inStr) {
     return inStr.replace(/\w\S*/g, function(tStr) {

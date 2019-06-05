@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // MODULES
 // --------------------------------
 var fs = require('fs');
